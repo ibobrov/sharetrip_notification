@@ -1,0 +1,14 @@
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+
+# Development tools and build artifacts
+/.tools/
+/.reports/
+/bin/
+
+# IDE settings
+.idea/
+.vscode/
+*.iml
