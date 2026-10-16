@@ -12,7 +12,7 @@
 
 - Добавить Goose-миграцию <timestamp>_create_notifications.sql с Up/Down.
 - Поля: id UUID PRIMARY KEY; recipient_id/type/status TEXT NOT NULL; payload JSONB NOT NULL DEFAULT '{}'; created_at TIMESTAMPTZ NOT NULL DEFAULT now().
-- Добавить CHECK для status=created, объектного payload и непустых непробельных recipient_id/type. Проверку входного контракта выполняет API; ограничения БД независимо защищают хранение.
+- Не добавлять доменные CHECK: проверку `recipient_id`, `type` и объектной формы `payload` выполняет API задачи 09. PostgreSQL проверяет тип JSONB и базовые ограничения столбцов.
 - Оставить только индекс первичного ключа; не добавлять history/outbox и межсервисные FK.
 - Инфраструктура Testcontainers PostgreSQL 16 была создана в первоначальной реализации и затем удалена пользователем; сейчас отсутствует.
 
@@ -21,7 +21,7 @@
 Выполнены 16 октября 2026 года до удаления тестов и helper. Не являются текущим автоматическим покрытием или поручением восстановить удалённые тесты.
 
 - [x] На одноразовой БД выполнить Up → Down → Up.
-- [x] Прямыми SQL-вставками проверить PK, NOT NULL, CHECK и значения по умолчанию.
+- [x] Прямыми SQL-вставками проверить PK, NOT NULL, тип JSONB и значения по умолчанию.
 - [x] Проверить автоматическую очистку контейнера и независимость от локальной прикладной БД.
 
 ## Критерий готовности
@@ -33,7 +33,7 @@
 
 ## Результат
 
-Сохранена migrations/20261016133055_create_notifications.sql с Up/Down, ограничениями полей и явным набором Unicode White_Space. Требования схемы и правила пробельных строк остаются в docs/spec.md.
+Сохранена `migrations/20261016133055_create_notifications.sql` с Up/Down, PK, NOT NULL, JSONB и значениями по умолчанию. Доменных CHECK и SQL-набора Unicode White_Space в актуальной миграции нет; проверка формы запроса перенесена в API.
 
 Удалены migrations/schema_test.go и internal/testdb/postgres.go. Автоматические проверки схемы, создание одноразовой PostgreSQL и её очистка больше не реализованы. Зависимости тестов пока остались в go.mod/go.sum; это не готовая инфраструктура.
 
