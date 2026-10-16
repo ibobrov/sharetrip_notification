@@ -12,7 +12,7 @@
 
 - Добавить Goose-миграцию <timestamp>_create_notifications.sql с Up/Down.
 - Поля: id UUID PRIMARY KEY; recipient_id/type/status TEXT NOT NULL; payload JSONB NOT NULL DEFAULT '{}'; created_at TIMESTAMPTZ NOT NULL DEFAULT now().
-- Не добавлять доменные CHECK: проверку `recipient_id`, `type` и объектной формы `payload` выполняет API задачи 09. PostgreSQL проверяет тип JSONB и базовые ограничения столбцов.
+- Не добавлять доменные CHECK: обязательные DTO-поля проверяет API через govalidator; PostgreSQL проверяет тип JSONB и базовые ограничения столбцов.
 - Оставить только индекс первичного ключа; не добавлять history/outbox и межсервисные FK.
 - Инфраструктура Testcontainers PostgreSQL 16 была создана в первоначальной реализации и затем удалена пользователем; сейчас отсутствует.
 
@@ -35,6 +35,6 @@
 
 Сохранена `migrations/20261016133055_create_notifications.sql` с Up/Down, PK, NOT NULL, JSONB и значениями по умолчанию. Доменных CHECK и SQL-набора Unicode White_Space в актуальной миграции нет; проверка формы запроса перенесена в API.
 
-Удалены migrations/schema_test.go и internal/testdb/postgres.go. Автоматические проверки схемы, создание одноразовой PostgreSQL и её очистка больше не реализованы. Зависимости тестов пока остались в go.mod/go.sum; это не готовая инфраструктура.
+Удалены migrations/schema_test.go и internal/testdb/postgres.go. Автоматические проверки схемы, создание одноразовой PostgreSQL и её очистка больше не реализованы. Неиспользуемые зависимости Testcontainers удалены из go.mod/go.sum в задаче 10.
 
 До удаления тестов на PostgreSQL 16.6 были проверены цикл Up → Down → Up, ограничения, значения по умолчанию и очистка контейнера; fmt, lint, test и build проходили на том этапе. Эти результаты исторические и не подтверждают текущий тестовый набор. При обновлении документации тесты и миграции не запускались. Down удаляет таблицу с данными. Локальная прикладная БД при первоначальной проверке миграции не использовалась.
