@@ -10,10 +10,10 @@
 
 ## Объём работ
 
-- Сохранить в первой версии POST /notifications и GET /notifications/{id}.
+- Сохранить в первой версии POST /api/v1/notifications и GET /api/v1/notifications/{id}.
 - Успех POST: HTTP 201; GET: HTTP 200. В обоих случаях data содержит id, recipient_id, type, status, payload и created_at, errors=[]. Идентификатор в API и БД называется id.
 - Сохранить ошибочную оболочку data=null, errors — массив строк; статусы 400, 404, 413, 415, 500.
-- Сохранить Location: /notifications/{id} в ответе POST. Обновить примеры, сценарии приёмки и описание локальной проверки.
+- Сохранить Location: /api/v1/notifications/{id} в ответе POST. Обновить примеры, сценарии приёмки и описание локальной проверки.
 - Сохранить правила payload, лимит тела 64 KiB и семантику повторного POST из спецификации.
 
 ## Проверки
